@@ -144,7 +144,7 @@ namespace Daniell.GoogleSheetDownloader
                 // Convert the output to target format
                 if (OutputFormat == E_OutputFormat.Json)
                 {
-                    data = "json";
+                    throw new NotImplementedException("Use CSV format for now. JSON is currently not implemented.");
                 }
 
                 // Raise callback
