@@ -132,6 +132,7 @@ namespace Daniell.GoogleSheetDownloader
             // Handle errors
             if (_webRequest.isNetworkError)
             {
+                OnDownloadError?.Invoke(_webRequest.error);
                 Debug.LogError($"Couldn't download the file: {_webRequest.error}");
             }
             // If there are no errors
