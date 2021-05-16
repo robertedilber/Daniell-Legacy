@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Daniell.Helpers.DataStructures
 {
@@ -14,17 +15,25 @@ namespace Daniell.Helpers.DataStructures
         /// <summary>
         /// Key.
         /// </summary>
-        public TKey Key { get; set; }
+        public TKey Key => _key;
 
         /// <summary>
         /// Value.
         /// </summary>
-        public TValue Value { get; set; }
+        public TValue Value => _value;
+
+        [SerializeField]
+        [Tooltip("Key")]
+        private TKey _key;
+
+        [SerializeField]
+        [Tooltip("Value")]
+        private TValue _value;
 
         public SerializableKeyValuePair(TKey key, TValue value)
         {
-            Key = key;
-            Value = value;
+            _key = key;
+            _value = value;
         }
 
         public static implicit operator SerializableKeyValuePair<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair)
