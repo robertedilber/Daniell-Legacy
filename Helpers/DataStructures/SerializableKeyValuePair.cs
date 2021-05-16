@@ -4,14 +4,21 @@ using System.Collections.Generic;
 namespace Daniell.Helpers.DataStructures
 {
     /// <summary>
-    /// A Serializable version of KeyValuePair
+    /// A Serializable version of a KeyValuePair.
     /// </summary>
     /// <typeparam name="TKey">Key type</typeparam>
     /// <typeparam name="TValue">Value type</typeparam>
     [Serializable]
     public struct SerializableKeyValuePair<TKey, TValue>
     {
+        /// <summary>
+        /// Key.
+        /// </summary>
         public TKey Key { get; set; }
+
+        /// <summary>
+        /// Value.
+        /// </summary>
         public TValue Value { get; set; }
 
         public SerializableKeyValuePair(TKey key, TValue value)
