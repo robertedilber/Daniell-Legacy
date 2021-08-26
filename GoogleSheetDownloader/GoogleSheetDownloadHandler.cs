@@ -130,7 +130,7 @@ namespace Daniell.GoogleSheetDownloader
             EditorApplication.update -= Update;
 
             // Handle errors
-            if (_webRequest.isNetworkError)
+            if (_webRequest.result == UnityWebRequest.Result.ConnectionError)
             {
                 OnDownloadError?.Invoke(_webRequest.error);
                 Debug.LogError($"Couldn't download the file: {_webRequest.error}");
