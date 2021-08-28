@@ -1,4 +1,5 @@
 ﻿using Daniell.EventSystem.Scriptable;
+using Daniell.Singletons;
 using System.Collections;
 using UnityEngine;
 

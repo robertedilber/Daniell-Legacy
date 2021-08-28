@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public abstract class PersistentSingletonMonoBehaviour<T> : SingletonMonoBehaviour<T> where T : MonoBehaviour
+namespace Daniell.Singletons
 {
-    protected override void Awake()
+    public abstract class PersistentSingletonMonoBehaviour<T> : SingletonMonoBehaviour<T> where T : MonoBehaviour
     {
-        base.Awake();
-        DontDestroyOnLoad(this);
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(this);
+        }
     }
 }
