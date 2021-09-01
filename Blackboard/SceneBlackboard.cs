@@ -7,90 +7,128 @@ using UnityEngine;
 namespace Daniell.Blackboard
 {
     /// <summary>
-    /// Holds references to scene objects bound by an ID
+    /// Holds values bound by an ID
     /// </summary>
     public class SceneBlackboard : SingletonMonoBehaviour<SceneBlackboard>
     {
-        public static event Action<string> OnReferenceSet;
-        public static event Action<string> OnReferenceUnset;
-
-        private Dictionary<string, object> _references = new Dictionary<string, object>();
-        private List<IBlackboardListener> _blackboardListeners = new List<IBlackboardListener>();
-
-        #region References
+        // Private fields
+        private Dictionary<string, object> _values = new Dictionary<string, object>();
+        private Dictionary<string, Action<string, object>> _subscriptions = new Dictionary<string, Action<string, object>>();
 
         /// <summary>
-        /// Add a new reference to the blackboard
+        /// Set a value in the blackboard
         /// </summary>
-        /// <param name="id">ID of the reference (must be unique)</param>
-        /// <param name="o">Object reference</param>
-        public static void AddReference(string id, object o)
+        /// <param name="id">ID of the value to set</param>
+        /// <param name="value">Value to be set</param>
+        public static void SetValue(string id, object value)
         {
-            // Delay call to add reference
             DelayedInstanceCall(instance =>
             {
-                instance._references.Add(id, o);
-                for (int i = 0; i < instance._blackboardListeners.Count; i++)
+                if (instance._values.ContainsKey(id))
                 {
-                    instance._blackboardListeners[i].OnReferenceSet(id);
+                    instance._values[id] = value;
+                }
+                else
+                {
+                    instance._values.Add(id, value);
+                }
+
+                // Call corresponding subscriptions
+                if (instance._subscriptions.TryGetValue(id, out Action<string, object> action))
+                {
+                    action?.Invoke(id, value);
                 }
             });
-
-            OnReferenceSet?.Invoke(id);
         }
 
         /// <summary>
-        /// Remove a reference from the blackboard
+        /// Unset a value in the blackboard
         /// </summary>
-        /// <param name="id">ID of the reference to remove</param>
-        public static void RemoveReference(string id)
+        /// <param name="id">ID of the value to remove</param>
+        public static void RemoveValue(string id)
         {
-            // Delay call to remove reference
             DelayedInstanceCall(instance =>
             {
-                instance._references.Remove(id);
-                for (int i = 0; i < instance._blackboardListeners.Count; i++)
+                // Call corresponding subscriptions
+                if (instance._subscriptions.TryGetValue(id, out Action<string, object> action))
                 {
-                    instance._blackboardListeners[i].OnReferenceUnset(id);
+                    action?.Invoke(id, null);
+                }
+
+                if (instance._values.ContainsKey(id))
+                {
+                    instance._values.Remove(id);
                 }
             });
-
-            OnReferenceUnset?.Invoke(id);
         }
 
         /// <summary>
-        /// Get a reference from the blackboard
+        /// Try to get a value from the blackboard
         /// </summary>
-        /// <typeparam name="T">Type of the reference</typeparam>
-        /// <param name="id">ID of the reference to get</param>
-        /// <returns>Null if the blackboard is not ready</returns>
-        public static T GetReference<T>(string id)
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="id">ID of the value to get</param>
+        /// <param name="value">Value if found</param>
+        /// <returns>Did the value exist in the blackboard?</returns>
+        public static bool TryGetValue<T>(string id, out T value)
         {
-            return (T)Instance?._references[id];
+            // Default the value
+            value = default;
+
+            // Try to get the value in the dictionary and cast it to 'T'
+            if (Instance._values.TryGetValue(id, out object dictValue))
+            {
+                value = (T)dictValue;
+                return true;
+            }
+
+            // If everything failed, return false
+            return false;
         }
-
-        #endregion
-
-        #region Blackboard Events
 
         /// <summary>
-        /// Register a new Blackboard Listener to this blackboard
+        /// Subscribe an Action to an ID
         /// </summary>
-        /// <param name="blackboardListener">Target blackboard listener</param>
-        public static void Register(IBlackboardListener blackboardListener)
+        /// <param name="id">ID to call the action for</param>
+        /// <param name="action">Action to be called</param>
+        public static void SubscribeToID(string id, Action<string, object> action)
         {
-            DelayedInstanceCall(x => x._blackboardListeners.Add(blackboardListener));
+            DelayedInstanceCall(instance =>
+            {
+                if (instance._subscriptions.ContainsKey(id))
+                {
+                    instance._subscriptions[id] += action;
+                }
+                else
+                {
+                    instance._subscriptions.Add(id, action);
+                }
+
+                // Invoke action if the ID is already set
+                if (TryGetValue(id, out object value))
+                {
+                    action?.Invoke(id, value);
+                }
+            });
         }
 
         /// <summary>
-        /// Unregister a new Blackboard Listener from this blackboard
+        /// Unsubscribe an Action from an ID
         /// </summary>
-        /// <param name="blackboardListener">Target blackboard listener</param>
-        public static void Unregister(IBlackboardListener blackboardListener)
+        /// <param name="id">ID to remove</param>
+        /// <param name="action">Action to unsubscribe</param>
+        public static void UnsubscribeFromID(string id, Action<string, object> action)
         {
-            DelayedInstanceCall(x => x._blackboardListeners.Remove(blackboardListener));
+            DelayedInstanceCall(instance =>
+            {
+                if (instance._subscriptions.ContainsKey(id))
+                {
+                    instance._subscriptions[id] -= action;
+                }
+                else
+                {
+                    instance._subscriptions.Remove(id);
+                }
+            });
         }
-
-        #endregion
     }
 }

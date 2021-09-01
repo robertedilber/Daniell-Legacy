@@ -17,11 +17,12 @@ namespace Daniell.Singletons
         {
             get
             {
+#if UNITY_EDITOR
                 if (_instance == null)
                 {
                     Debug.LogWarning($"{typeof(T).Name} is not yet ready.");
                 }
-
+#endif
                 return _instance;
             }
             set { _instance = value; }
@@ -30,11 +31,11 @@ namespace Daniell.Singletons
         /// <summary>
         /// Is this singleton ready?
         /// </summary>
-        public bool IsInstanceReady => _instance != null;
+        public static bool IsInstanceReady => _instance != null;
 
         // Private fields
         private static T _instance;
-        private static List<Action<T>> _postponedActions = new List<Action<T>>();
+        private static List<Action<T>> _delayedInstanceCalls = new List<Action<T>>();
 
         /// <summary>
         /// Called when the instance is ready
@@ -45,19 +46,28 @@ namespace Daniell.Singletons
         {
             // If the Instance is already set, destroy this instance
             if (_instance != null)
+            {
                 Destroy(this);
+            }
             else
             {
+                // Set the instance
                 Instance = this as T;
+
+#if UNITY_EDITOR
+                Debug.Log($"Singleton instance created for {typeof(T).Name}");
+#endif
+
+                // Call Instance ready
                 OnInstanceReady?.Invoke();
 
-                // Execute postponed actions
-                for (int i = 0; i < _postponedActions.Count; i++)
+                // Execute delayed instance calls actions
+                for (int i = 0; i < _delayedInstanceCalls.Count; i++)
                 {
-                    _postponedActions[i]?.Invoke(_instance);
+                    _delayedInstanceCalls[i]?.Invoke(_instance);
                 }
 
-                _postponedActions.Clear();
+                _delayedInstanceCalls.Clear();
             }
         }
 
@@ -73,15 +83,9 @@ namespace Daniell.Singletons
         /// <param name="action">Action to be delayed</param>
         protected static void DelayedInstanceCall(Action<T> action)
         {
-            if (!Application.isPlaying)
-            {
-                Debug.Log("Action not called, application is not playing.");
-                return;
-            }
-
             if (_instance == null)
             {
-                _postponedActions.Add(action);
+                _delayedInstanceCalls.Add(action);
             }
             else
             {
