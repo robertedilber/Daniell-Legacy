@@ -63,7 +63,7 @@ namespace Daniell.SaveSystem.Examples
 
         /// <summary>
         /// Data Structure holding all of the values we want to save. In this case, it can be private.
-        /// It also needs to have public fields so serialize properly.
+        /// It also needs to have public fields to serialize properly.
         /// </summary>
         private struct SaveData
         {

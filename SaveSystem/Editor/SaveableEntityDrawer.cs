@@ -28,6 +28,7 @@ namespace Daniell.SaveSystem.Editor
             // Show button to generate ID
             if (GUI.Button(new Rect(position.x, position.y, 100, 18), "Generate ID"))
             {
+                // Generate ID
                 saveID.stringValue = GUID.Generate().ToString();
             }
 

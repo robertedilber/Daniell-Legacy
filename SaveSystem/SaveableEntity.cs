@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Daniell.SaveSystem
@@ -27,6 +28,14 @@ namespace Daniell.SaveSystem
         /// Saves the current object state
         /// </summary>
         public abstract void Save();
+
+        /// <summary>
+        /// Generate a new save ID
+        /// </summary>
+        public void GenerateSaveID()
+        {
+            _saveID = GUID.Generate().ToString();
+        }
     }
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Daniell.Coroutines;
+using Daniell.EventSystem.Scriptable;
+using UnityEngine;
 
 namespace Daniell.SaveSystem
 {
@@ -16,6 +18,7 @@ namespace Daniell.SaveSystem
 
         private void OnEnable()
         {
+
             // Register to the Save Manager
             SaveManager.Register(this);
 
@@ -23,6 +26,8 @@ namespace Daniell.SaveSystem
             _saveableEntity.OnLoad += Load;
             _saveableEntity.OnSave += Save;
         }
+
+        private Coroutine _delayCoroutine;
 
         private void OnDisable()
         {
