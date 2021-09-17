@@ -30,7 +30,7 @@ namespace Daniell.SaveSystem
         }
 
         /// <summary>
-        /// Editor helper to save the current game state
+        /// Save all data
         /// </summary>
         [MenuItem("Daniell/Save Manager/Save")]
         public static void Save()
@@ -42,7 +42,7 @@ namespace Daniell.SaveSystem
         }
 
         /// <summary>
-        /// Editor helper to load the last saved game state
+        /// Load all data
         /// </summary>
         [MenuItem("Daniell/Save Manager/Load")]
         public static void Load()
@@ -50,6 +50,18 @@ namespace Daniell.SaveSystem
             for (int i = 0; i < _saveables.Count; i++)
             {
                 _saveables[i].SaveableEntity.Load();
+            }
+        }
+
+        /// <summary>
+        /// Clear all data
+        /// </summary>
+        [MenuItem("Daniell/Save Manager/Clear")]
+        public static void Clear()
+        {
+            for (int i = 0; i < _saveables.Count; i++)
+            {
+                _saveables[i].SaveableEntity.Clear();
             }
         }
     }

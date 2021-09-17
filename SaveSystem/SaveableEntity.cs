@@ -30,6 +30,11 @@ namespace Daniell.SaveSystem
         public abstract void Save();
 
         /// <summary>
+        /// Clear saved data
+        /// </summary>
+        public abstract void Clear();
+
+        /// <summary>
         /// Generate a new save ID
         /// </summary>
         public void GenerateSaveID()
@@ -86,6 +91,15 @@ namespace Daniell.SaveSystem
             PlayerPrefs.SetString(SaveID, json);
 
             Debug.Log($"Saved Object with ID: {SaveID}");
+        }
+
+        public override void Clear()
+        {
+            // Clear saved data if it exists
+            if (PlayerPrefs.HasKey(SaveID))
+            {
+                PlayerPrefs.DeleteKey(SaveID);
+            }
         }
     }
 }
