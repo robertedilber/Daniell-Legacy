@@ -10,7 +10,7 @@ public class DialogueGraphView : GraphView
 {
     private DialogueGraphSearchWindow _dialogueGraphSearchWindow;
 
-    public DialogueGraphView(string name, EditorWindow parent)
+    public DialogueGraphView(string name, EditorWindow parent, DialogueFile dialogueFile)
     {
         this.name = name;
 
@@ -31,13 +31,13 @@ public class DialogueGraphView : GraphView
         CreateNode<StartNode>();
 
         _dialogueGraphSearchWindow = ScriptableObject.CreateInstance<DialogueGraphSearchWindow>();
-        _dialogueGraphSearchWindow.Initialize(parent, this);
+        _dialogueGraphSearchWindow.Initialize(parent, this, dialogueFile.GetValidNodeTypes());
         nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _dialogueGraphSearchWindow);
     }
 
-    public GraphNode CreateNode<T>() where T : GraphNode, new()
+    public BaseNode CreateNode<T>() where T : BaseNode, new()
     {
-        GraphNode node = new T();
+        BaseNode node = new T();
         AddElement(node);
         return node;
     }

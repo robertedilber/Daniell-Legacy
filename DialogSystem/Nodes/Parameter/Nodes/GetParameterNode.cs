@@ -4,7 +4,7 @@ using UnityEngine;
 public class GetParameterNode : ParameterNode
 {
     protected override Color DefaultNodeColor => new Color32(80, 100, 201, 255);
-    protected override Type DataType => typeof(object);
+    protected override Type DataType => typeof(GetParameterNodeData);
 
     protected override string GetName(string type)
     {

@@ -1,8 +1,5 @@
 ﻿using Daniell.DialogSystem;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 using System;
 using Object = UnityEngine.Object;
 
@@ -17,11 +14,8 @@ public class DialogueLineNode : GraphNode
 
     public DialogueLineNode()
     {
-        // Add Input
-        AddInputPort("Input");
-
         // Add output
-        AddOutputPort("Next", out Port port);
+        AddOutputPort("Next");
 
         // Add parameter fields and link to variables
         AddObjectField<Character>(SPEAKER_CONTROL_NAME);

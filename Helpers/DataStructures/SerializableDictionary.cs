@@ -15,7 +15,7 @@ namespace Daniell.Helpers.DataStructures
         {
             get
             {
-                if(_internalDictionary == null)
+                if (_internalDictionary == null)
                 {
                     UpdateInternalDictionary();
                 }
@@ -38,6 +38,26 @@ namespace Daniell.Helpers.DataStructures
                 SerializableKeyValuePair<TKey, TValue> keyValuePair = this[i];
                 _internalDictionary.Add(keyValuePair.Key, keyValuePair.Value);
             }
+        }
+
+        public static implicit operator SerializableDictionary<TKey, TValue>(Dictionary<TKey, TValue> d)
+        {
+            var dictionary = new SerializableDictionary<TKey, TValue>();
+            foreach (var kvp in d)
+            {
+                dictionary.Add(new SerializableKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
+            }
+            return dictionary;
+        }
+
+        public static implicit operator Dictionary<TKey, TValue>(SerializableDictionary<TKey, TValue> d)
+        {
+            var dictionary = new Dictionary<TKey, TValue>();
+            foreach (var kvp in d)
+            {
+                dictionary.Add(kvp.Key, kvp.Value);
+            }
+            return dictionary;
         }
     }
 }

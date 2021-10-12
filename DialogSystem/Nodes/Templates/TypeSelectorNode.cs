@@ -94,9 +94,10 @@ public abstract class TypeSelectorNode : GraphNode
         List<VisualElement> toRemove = new List<VisualElement>();
 
         // Get objects to remove
-        foreach (var v in container.Children())
+        foreach (var visualElement in container.Children())
         {
-            toRemove.Add(v);
+            TryRemoveField(visualElement);
+            toRemove.Add(visualElement);
         }
 
         // Remove all from hierarchy

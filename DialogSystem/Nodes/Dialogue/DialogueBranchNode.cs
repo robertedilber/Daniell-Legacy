@@ -12,13 +12,9 @@ public class DialogueBranchNode : GraphNode
     protected const int DEFAULT_BRANCH_AMOUNT = 2;
     protected override Color DefaultNodeColor => new Color32(160, 100, 56, 255);
     protected override string DefaultNodeName => "Dialogue Branch";
-    protected override Type DataType => typeof(object);
 
     public DialogueBranchNode()
     {
-        // Add Input
-        AddInputPort("Input");
-
         // Add a branch button
         Button branchButton = new Button(() => AddBranchPort());
         branchButton.text = "Add Branch";
@@ -39,7 +35,7 @@ public class DialogueBranchNode : GraphNode
     protected void AddBranchPort()
     {
         // Add the output port
-        AddOutputPort(Guid.NewGuid().ToString(), out Port port);
+        Port port = AddOutputPort(Guid.NewGuid().ToString());
 
         // Set Port label
         ResetBranchNumbers();

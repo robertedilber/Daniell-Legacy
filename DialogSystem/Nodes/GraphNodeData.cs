@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Daniell.Helpers.DataStructures;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,12 @@ public class GraphNodeData : ScriptableObject
     /// <summary>
     /// Original GUID of the node.
     /// </summary>
-    public string GUID { get => _guid; set => _guid= value; }
+    public string GUID { get => _guid; set => _guid = value; }
     [SerializeField] private string _guid;
+
+    /// <summary>
+    /// GUIDs of nodes connected to this one
+    /// </summary>
+    public SerializableDictionary<string, string> ConnectedGUIDs { get => _connectedGUIDs; set => _connectedGUIDs = value; }
+    [SerializeField] private SerializableDictionary<string, string> _connectedGUIDs = new SerializableDictionary<string, string>();
 }

@@ -5,11 +5,10 @@ using UnityEngine;
 /// <summary>
 /// Node used as a starting point of every dialogue graph
 /// </summary>
-public class StartNode : GraphNode
+public class StartNode : BaseNode
 {
     protected override Color DefaultNodeColor => new Color(0.15f, 0.43f, 0.12f);
     protected override string DefaultNodeName => "Start";
-    public override bool IsSaveable => false;
 
     public StartNode()
     {

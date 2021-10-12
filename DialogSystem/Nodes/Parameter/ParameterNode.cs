@@ -4,8 +4,6 @@ public abstract class ParameterNode : TypeSelectorNode
 {
     public ParameterNode()
     {
-        // Input Port
-        AddInputPort("Input");
     }
 
     protected override void DrawDefaultContent()

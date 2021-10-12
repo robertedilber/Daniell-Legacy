@@ -4,14 +4,11 @@ using UnityEngine;
 public class SetParameterNode : ParameterNode
 {
     protected override Color DefaultNodeColor => new Color32(44, 130, 201, 255);
-    protected override Type DataType => typeof(object);
 
     public SetParameterNode()
     {
         // Output Port
         AddOutputPort("Output");
-
-        GetOutputPorts();
     }
 
     protected override string GetName(string type)

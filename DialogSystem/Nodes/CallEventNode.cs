@@ -6,12 +6,8 @@ public class CallEventNode : TypeSelectorNode
 {
     protected override Color DefaultNodeColor => new Color32(80, 150, 100, 255);
 
-    protected override Type DataType => typeof(object);
-
     public CallEventNode()
     {
-        AddInputPort("Input");
-
         AddOutputPort("Output");
     }
 
