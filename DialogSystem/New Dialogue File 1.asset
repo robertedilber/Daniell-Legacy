@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8572851315218042318
+--- !u!114 &-8488622144051769996
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,49 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7194043d62bb12b46bab842830aa9f3b, type: 3}
   m_Name: DialogueLineNodeData
   m_EditorClassIdentifier: 
-  _x: 1125
-  _y: 150
+  _x: 825
+  _y: 0
   _nodeTypeName: DialogueLineNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
     PublicKeyToken=null
-  _guid: 46237578-c6a8-4d00-9699-3be193ff93e5
-  speaker: {fileID: 0}
-  line: 
---- !u!114 &-5548036724444807260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7194043d62bb12b46bab842830aa9f3b, type: 3}
-  m_Name: DialogueLineNodeData
-  m_EditorClassIdentifier: 
-  _x: 225
-  _y: 50
-  _nodeTypeName: DialogueLineNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-    PublicKeyToken=null
-  _guid: 88554d4a-6c3f-43f1-bbe1-44b274e31586
-  speaker: {fileID: 0}
-  line: 
---- !u!114 &-4141882001024281483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7194043d62bb12b46bab842830aa9f3b, type: 3}
-  m_Name: DialogueLineNodeData
-  m_EditorClassIdentifier: 
-  _x: 1125
-  _y: -25
-  _nodeTypeName: DialogueLineNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-    PublicKeyToken=null
-  _guid: 54b6abe4-e510-488b-987d-e1b83a9bd642
+  _guid: e7928d03-e5cd-488e-9416-e0c700c0ef3b
   speaker: {fileID: 0}
   line: 
 --- !u!114 &11400000
@@ -69,8 +31,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a29b88460e07844895b7ccfcb0a4d1, type: 3}
   m_Name: New Dialogue File 1
   m_EditorClassIdentifier: 
-  _startNodeConnectedGUID: 88554d4a-6c3f-43f1-bbe1-44b274e31586
---- !u!114 &1518172657580909602
+  _startNodeConnectedGUID: 12cc987e-62c7-4ffc-8f93-3d9ba3ffed87
+--- !u!114 &8243890408550130980
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -79,11 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e58badeaf370ff74dbc79c010cd10357, type: 3}
-  m_Name: GetParameterNodeData
+  m_Script: {fileID: 11500000, guid: 7194043d62bb12b46bab842830aa9f3b, type: 3}
+  m_Name: DialogueLineNodeData
   m_EditorClassIdentifier: 
-  _x: 675
-  _y: 50
-  _nodeTypeName: GetParameterNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+  _x: 250
+  _y: 0
+  _nodeTypeName: DialogueLineNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
     PublicKeyToken=null
-  _guid: f429f326-40c3-4d14-bb7f-7eebdc731cc9
+  _guid: 12cc987e-62c7-4ffc-8f93-3d9ba3ffed87
+  speaker: {fileID: 0}
+  line: 

@@ -45,7 +45,10 @@ public abstract class BaseNode : Node
     protected readonly Rect _defaultNodeRect = new Rect(DEFAULT_NODE_X_POSITION, DEFAULT_NODE_Y_POSITION, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT);
 
     // Private fields
-    private Dictionary<string, VisualElement> _fields = new Dictionary<string, VisualElement>();
+    private Dictionary<string, LabeledNodeField> _fields = new Dictionary<string, LabeledNodeField>();
+
+    // Events
+    public event Action OnNodeUpdated;
 
     public BaseNode()
     {
@@ -67,6 +70,11 @@ public abstract class BaseNode : Node
 
         // Set node name
         title = DefaultNodeName;
+    }
+
+    public override bool IsCopiable()
+    {
+        return true;
     }
 
     #region Ports
@@ -125,6 +133,28 @@ public abstract class BaseNode : Node
         // Refresh node view
         RefreshExpandedState();
         RefreshPorts();
+    }
+
+    public virtual void RemovePort(string name, Direction direction)
+    {
+        var container = direction == Direction.Input ? inputContainer : outputContainer;
+
+        Port targetPort = null;
+
+        foreach (var element in container.Children())
+        {
+            Port p = element.Q<Port>();
+            if (p.portName == name)
+            {
+                targetPort = p;
+                break;
+            }
+        }
+
+        if (targetPort != null)
+        {
+            targetPort.RemoveFromHierarchy();
+        }
     }
 
     #endregion
@@ -199,12 +229,12 @@ public abstract class BaseNode : Node
 
                     // There should only be one connection from the output port
                     connectedGUID = targetNode.GUID;
+
+                    // Add the port to the list
+                    connectedGUIDs.Add(port.portName, connectedGUID);
                     break;
                 }
             }
-
-            // Add the port to the list
-            connectedGUIDs.Add(port.portName, connectedGUID);
         }
 
         // Return connected nodes as GUIDs
@@ -245,15 +275,15 @@ public abstract class BaseNode : Node
 
     #endregion
 
-    #region Content Helpers
+    #region Field Handling
 
-    protected bool TryGetField<T>(string fieldName, out T field) where T : VisualElement
+    protected bool TryGetField(string fieldName, out LabeledNodeField field)
     {
         field = default;
 
         if (_fields.ContainsKey(fieldName))
         {
-            field = (T)_fields[fieldName];
+            field = _fields[fieldName];
             return true;
         }
         else
@@ -265,18 +295,18 @@ public abstract class BaseNode : Node
     protected void SetFieldValue<T>(string fieldName, T value)
     {
         // Set value if the control exists
-        if (TryGetField(fieldName, out BaseField<T> field))
+        if (TryGetField(fieldName, out LabeledNodeField field) && field is LabeledNodeField<T> genericField)
         {
-            field.value = value;
+            genericField.SetValue(value);
         }
     }
 
     protected T GetFieldValue<T>(string fieldName)
     {
         // Get value if the control exists
-        if (TryGetField(fieldName, out BaseField<T> field))
+        if (TryGetField(fieldName, out LabeledNodeField field) && field is LabeledNodeField<T> genericField)
         {
-            return field.value;
+            return genericField.GetValue();
         }
         else
         {
@@ -284,93 +314,37 @@ public abstract class BaseNode : Node
         }
     }
 
-    protected void TryRemoveField(VisualElement field)
+    protected void AddField(LabeledNodeField labeledNodeField, string fieldName, VisualElement container = null)
     {
-        string keyToRemove = null;
-
-        foreach (var f in _fields)
+        if (container == null)
         {
-            if (f.Value == field)
-            {
-                keyToRemove = f.Key;
-            }
+            container = extensionContainer;
         }
 
-        if (keyToRemove != null)
-        {
-            _fields.Remove(keyToRemove);
-        }
-    }
+        labeledNodeField.Create();
 
-    protected void AddField(string fieldName, VisualElement field)
-    {
-        // Add to controls
-        _fields.Add(fieldName, field);
-
-        Label label = new Label();
-        label.text = fieldName;
-
-        Box box = new Box();
-        box.style.borderBottomLeftRadius = box.style.borderBottomRightRadius = box.style.borderTopLeftRadius = box.style.borderTopRightRadius = 5;
-        box.style.marginBottom = 5;
-        box.Add(label);
-        box.Add(field);
-
-        extensionContainer.Add(box);
-
+        container.Add(labeledNodeField.FieldContainer);
+        _fields.Add(fieldName, labeledNodeField);
         RefreshExpandedState();
     }
 
-    protected TextField AddTextfield(string name, bool multiline, Action<string> onValueChangedCallback = null)
+    protected void RemoveField(string fieldName)
     {
-        TextField textField = new TextField();
-        textField.multiline = multiline;
-        textField.RegisterValueChangedCallback(x => onValueChangedCallback?.Invoke(x.newValue));
+        if (_fields.ContainsKey(fieldName))
+        {
+            // Find target field
+            var targetField = _fields[fieldName].FieldContainer;
 
-        AddField(name, textField);
+            // Find container
+            var targetContainer = targetField.parent;
 
-        return textField;
-    }
+            // Remove field from container
+            targetContainer.Remove(targetField);
 
-    protected Toggle AddToggle(string name, Action<bool> onValueChangedCallback = null)
-    {
-        Toggle toggle = new Toggle();
-        toggle.RegisterValueChangedCallback(x => onValueChangedCallback?.Invoke(x.newValue));
-
-        AddField(name, toggle);
-
-        return toggle;
-    }
-
-    protected FloatField AddFloatField(string name, Action<float> onValueChangedCallback = null)
-    {
-        FloatField floatField = new FloatField();
-        floatField.RegisterValueChangedCallback(x => onValueChangedCallback?.Invoke(x.newValue));
-
-        AddField(name, floatField);
-
-        return floatField;
-    }
-
-    protected IntegerField AddIntField(string name, Action<int> onValueChangedCallback = null)
-    {
-        IntegerField integerField = new IntegerField();
-        integerField.RegisterValueChangedCallback(x => onValueChangedCallback?.Invoke(x.newValue));
-
-        AddField(name, integerField);
-
-        return integerField;
-    }
-
-    protected ObjectField AddObjectField<T>(string name, Action<T> onValueChangedCallback = null) where T : UnityEngine.Object
-    {
-        ObjectField objectField = new ObjectField();
-        objectField.objectType = typeof(T);
-        objectField.RegisterValueChangedCallback(x => onValueChangedCallback?.Invoke((T)x.newValue));
-
-        AddField(name, objectField);
-
-        return objectField;
+            // Remove from container list
+            _fields.Remove(fieldName);
+            RefreshExpandedState();
+        }
     }
 
     #endregion

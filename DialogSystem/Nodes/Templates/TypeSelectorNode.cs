@@ -27,13 +27,14 @@ public abstract class TypeSelectorNode : GraphNode
         typeSelector.style.marginTop = 3;
         typeSelector.style.marginRight = 3;
 
-        SetBool();
-
         titleContainer.Add(typeSelector);
     }
 
     public void SelectType(string type)
     {
+        ClearContent();
+        title = GetName(SelectedType.ToString());
+
         switch (type)
         {
             case "Bool":
@@ -55,55 +56,23 @@ public abstract class TypeSelectorNode : GraphNode
 
     protected virtual void ClearContent() { }
 
-    protected virtual void DrawDefaultContent() { }
-
     protected virtual void SetBool()
     {
-        ClearContent();
-        DrawDefaultContent();
         SelectedType = E_NodeType.Bool;
-        title = GetName(SelectedType.ToString());
     }
 
     protected virtual void SetString()
     {
-        ClearContent();
-        DrawDefaultContent();
         SelectedType = E_NodeType.String;
-        title = GetName(SelectedType.ToString());
     }
 
     protected virtual void SetFloat()
     {
-        ClearContent();
-        DrawDefaultContent();
         SelectedType = E_NodeType.Float;
-        title = GetName(SelectedType.ToString());
     }
 
     protected virtual void SetInt()
     {
-        ClearContent();
-        DrawDefaultContent();
         SelectedType = E_NodeType.Int;
-        title = GetName(SelectedType.ToString());
-    }
-
-    protected void ClearContentContainer(VisualElement container)
-    {
-        List<VisualElement> toRemove = new List<VisualElement>();
-
-        // Get objects to remove
-        foreach (var visualElement in container.Children())
-        {
-            TryRemoveField(visualElement);
-            toRemove.Add(visualElement);
-        }
-
-        // Remove all from hierarchy
-        for (int i = 0; i < toRemove.Count; i++)
-        {
-            toRemove[i].RemoveFromHierarchy();
-        }
     }
 }

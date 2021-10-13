@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SetParameterNode : ParameterNode
 {
+    public const string PARAMETER_VALUE_FIELD_NAME = "Value";
+
     protected override Color DefaultNodeColor => new Color32(44, 130, 201, 255);
 
     public SetParameterNode()
@@ -19,31 +21,32 @@ public class SetParameterNode : ParameterNode
     protected override void ClearContent()
     {
         base.ClearContent();
-
-        ClearContentContainer(extensionContainer);
+        RemoveField(PARAMETER_VALUE_FIELD_NAME);
     }
 
     protected override void SetBool()
     {
-        base.SetBool();
-        AddToggle("Value", null);
+        base.SetBool(); 
+        AddField(new BoolNodeField("Value"), PARAMETER_VALUE_FIELD_NAME);
+
     }
 
     protected override void SetString()
     {
         base.SetString();
-        AddTextfield("Value", false, null);
+        AddField(new StringNodeField("Value", false), PARAMETER_VALUE_FIELD_NAME);
     }
 
     protected override void SetFloat()
     {
         base.SetFloat();
-        AddFloatField("Value", null);
+        AddField(new FloatNodeField("Value"), PARAMETER_VALUE_FIELD_NAME);
     }
 
     protected override void SetInt()
     {
         base.SetInt();
-        AddIntField("Value", null);
+        AddField(new IntNodeField("Value"), PARAMETER_VALUE_FIELD_NAME);
     }
 }
+

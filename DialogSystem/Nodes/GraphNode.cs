@@ -76,3 +76,14 @@ public abstract class GraphNode : BaseNode
 
     #endregion
 }
+
+public class CommentNode : BaseNode
+{
+    protected override Color DefaultNodeColor => new Color32(80, 120, 113, 150);
+    protected override string DefaultNodeName => "Comment";
+
+    public CommentNode()
+    {
+        AddField(new StringNodeField("Comment", true), "field");
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using Daniell.Helpers.DataStructures;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -37,4 +38,32 @@ public class GraphNodeData : ScriptableObject
     /// </summary>
     public SerializableDictionary<string, string> ConnectedGUIDs { get => _connectedGUIDs; set => _connectedGUIDs = value; }
     [SerializeField] private SerializableDictionary<string, string> _connectedGUIDs = new SerializableDictionary<string, string>();
+
+    /// <summary>
+    /// Try to get the next connected node
+    /// </summary>
+    /// <param name="nextGUID">Next found GUID</param>
+    /// <returns>True if there is a valid connected node</returns>
+    public virtual bool TryGetNextGUID(out string nextGUID)
+    {
+        nextGUID = "";
+
+        if (_connectedGUIDs.Count > 0)
+        {
+            // Get the first connected port
+            nextGUID = _connectedGUIDs.First(x => x.Value != null && x.Value != "").Value;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Set custom data to be used when this node is processed
+    /// </summary>
+    /// <param name="customData">Data to be used by the node processor</param>
+    public virtual void SetCustomData(params object[] customData)
+    {
+        // Do nothing
+    }
 }

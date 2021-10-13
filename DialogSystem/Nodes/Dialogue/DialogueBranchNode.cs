@@ -9,9 +9,13 @@ using UnityEngine.UIElements;
 /// </summary>
 public class DialogueBranchNode : GraphNode
 {
-    protected const int DEFAULT_BRANCH_AMOUNT = 2;
+    public const string SPEAKER_FIELD_NAME = "Speaker";
+    public const string LINE_FIELD_NAME = "Line";
+
+    protected const int DEFAULT_BRANCH_COUNT = 2;
     protected override Color DefaultNodeColor => new Color32(160, 100, 56, 255);
     protected override string DefaultNodeName => "Dialogue Branch";
+    protected override Type DataType => typeof(DialogueBranchNodeData);
 
     public DialogueBranchNode()
     {
@@ -21,12 +25,11 @@ public class DialogueBranchNode : GraphNode
         branchButton.style.marginRight = 3;
         titleContainer.Add(branchButton);
 
-        AddObjectField<Character>("Speaker");
-
-        AddTextfield("Line", multiline: true);
+        AddField(new ObjectNodeField<Character>("Speaker"), SPEAKER_FIELD_NAME);
+        AddField(new StringNodeField("Line", true), LINE_FIELD_NAME);
 
         // Add default branches
-        for (int i = 0; i < DEFAULT_BRANCH_AMOUNT; i++)
+        for (int i = 0; i < DEFAULT_BRANCH_COUNT; i++)
         {
             AddBranchPort();
         }
@@ -65,5 +68,15 @@ public class DialogueBranchNode : GraphNode
                 portLabel.style.width = 20;
             }
         }
+    }
+
+    public override GraphNodeData ToNodeData()
+    {
+        return base.ToNodeData();
+    }
+
+    public override void FromNodeData(GraphNodeData nodeData)
+    {
+        base.FromNodeData(nodeData);
     }
 }

@@ -261,6 +261,7 @@ public class DialogueGraphWindow : EditorWindow
             for (int j = 0; j < nodeData.ConnectedGUIDs.Count; j++)
             {
                 var connectedGUID = nodeData.ConnectedGUIDs[j];
+
                 // Skip null or empty GUIDs
                 if (connectedGUID.Value == null || connectedGUID.Value == "")
                     continue;

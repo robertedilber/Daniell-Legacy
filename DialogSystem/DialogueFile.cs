@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEditor;
 using Daniell.Helpers.DataStructures;
 
@@ -36,7 +35,8 @@ public class DialogueFile : ScriptableObject
             {typeof(DialogueBranchNode), "Dialogue"},
             {typeof(GetParameterNode), "Parameters"},
             {typeof(SetParameterNode), "Parameters"},
-            {typeof(CallEventNode), "Event"}
+            {typeof(CallEventNode), "Event"},
+            {typeof(CommentNode), "Utilities"}
         };
     }
 
@@ -102,4 +102,30 @@ public class DialogueFile : ScriptableObject
     #endregion
 
 #endif
+
+    #region Read Nodes
+
+    public bool TryGetNextNodeData(GraphNodeData currentNodeData, out GraphNodeData nextNodeData)
+    {
+        var isNextNodeValid = currentNodeData.TryGetNextGUID(out string nextGUID);
+        nextNodeData = null;
+        if (isNextNodeValid)
+        {
+            nextNodeData = _nodeDatas[nextGUID];
+        }
+
+        return isNextNodeValid;
+    }
+
+    public GraphNodeData GetStartNode()
+    {
+        if (StartNodeConnectedGUID != null && StartNodeConnectedGUID != "")
+        {
+            return _nodeDatas[StartNodeConnectedGUID];
+        }
+
+        return null;
+    }
+
+    #endregion
 }

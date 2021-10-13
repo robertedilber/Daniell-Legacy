@@ -4,45 +4,50 @@ using UnityEngine;
 
 public class CallEventNode : TypeSelectorNode
 {
+    public const string EVENT_FIELD_NAME = "Event";
+    public const string EVENT_VALUE_FIELD_NAME = "Event Value";
+
     protected override Color DefaultNodeColor => new Color32(80, 150, 100, 255);
 
     public CallEventNode()
     {
         AddOutputPort("Output");
+        SelectType("Bool");
     }
 
     protected override void ClearContent()
     {
         base.ClearContent();
-        ClearContentContainer(extensionContainer);
+        RemoveField(EVENT_FIELD_NAME);
+        RemoveField(EVENT_VALUE_FIELD_NAME);
     }
 
     protected override void SetBool()
     {
         base.SetBool();
-        AddObjectField<BoolEvent>("Event");
-        AddToggle("Event Value");
+        AddField(new ObjectNodeField<BoolEvent>("Event"), EVENT_FIELD_NAME);
+        AddField(new BoolNodeField("Event Value"), EVENT_VALUE_FIELD_NAME);
     }
 
     protected override void SetString()
     {
         base.SetString();
-        AddObjectField<StringEvent>("Event");
-        AddTextfield("Event Value", true);
+        AddField(new ObjectNodeField<StringEvent>("Event"), EVENT_FIELD_NAME);
+        AddField(new StringNodeField("Event Value", false), EVENT_VALUE_FIELD_NAME);
     }
 
     protected override void SetFloat()
     {
         base.SetFloat();
-        AddObjectField<FloatEvent>("Event");
-        AddFloatField("Event Value");
+        AddField(new ObjectNodeField<FloatEvent>("Event"), EVENT_FIELD_NAME);
+        AddField(new FloatNodeField("Event Value"), EVENT_VALUE_FIELD_NAME);
     }
 
     protected override void SetInt()
     {
         base.SetInt();
-        AddObjectField<IntEvent>("Event");
-        AddIntField("Event Value");
+        AddField(new ObjectNodeField<IntEvent>("Event"), EVENT_FIELD_NAME);
+        AddField(new IntNodeField("Event Value"), EVENT_VALUE_FIELD_NAME);
     }
 
     protected override string GetName(string type)
