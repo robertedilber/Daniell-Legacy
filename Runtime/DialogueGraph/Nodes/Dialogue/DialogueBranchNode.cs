@@ -72,7 +72,9 @@ public class DialogueBranchNode : GraphNode
 
     public override GraphNodeData ToNodeData()
     {
-        return base.ToNodeData();
+        DialogueBranchNodeData data = (DialogueBranchNodeData)base.ToNodeData();
+
+        return data;
     }
 
     public override void FromNodeData(GraphNodeData nodeData)

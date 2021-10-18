@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
+#endif
 
 namespace Daniell.SaveSystem
 {
@@ -32,7 +34,9 @@ namespace Daniell.SaveSystem
         /// <summary>
         /// Save all data
         /// </summary>
+#if UNITY_EDITOR
         [MenuItem("Daniell/Save Manager/Save")]
+#endif
         public static void Save()
         {
             for (int i = 0; i < _saveables.Count; i++)
@@ -44,7 +48,9 @@ namespace Daniell.SaveSystem
         /// <summary>
         /// Load all data
         /// </summary>
+#if UNITY_EDITOR
         [MenuItem("Daniell/Save Manager/Load")]
+#endif
         public static void Load()
         {
             for (int i = 0; i < _saveables.Count; i++)
@@ -56,7 +62,9 @@ namespace Daniell.SaveSystem
         /// <summary>
         /// Clear all data
         /// </summary>
+#if UNITY_EDITOR
         [MenuItem("Daniell/Save Manager/Clear")]
+#endif
         public static void Clear()
         {
             for (int i = 0; i < _saveables.Count; i++)
