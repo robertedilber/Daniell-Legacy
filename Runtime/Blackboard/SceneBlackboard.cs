@@ -1,10 +1,8 @@
-using Daniell.Singletons;
+using Daniell.Runtime.Singletons;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace Daniell.Blackboard
+namespace Daniell.Runtime.Blackboard
 {
     /// <summary>
     /// Holds values bound by an ID

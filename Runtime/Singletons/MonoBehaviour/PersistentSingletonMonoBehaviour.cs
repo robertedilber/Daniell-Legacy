@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Daniell.Singletons
+namespace Daniell.Runtime.Singletons
 {
     public abstract class PersistentSingletonMonoBehaviour<T> : SingletonMonoBehaviour<T> where T : MonoBehaviour
     {

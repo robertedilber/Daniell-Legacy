@@ -1,4 +1,8 @@
-﻿public class GetParameterNodeData : GraphNodeData
+﻿
+namespace Daniell.Runtime.DialogueNodes
 {
+    public class GetParameterNodeData : GraphNodeData
+    {
 
+    }
 }

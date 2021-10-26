@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Daniell.StateMachine
+namespace Daniell.Runtime.StateMachine
 {
     /// <summary>
     /// A simple State Pattern implementation

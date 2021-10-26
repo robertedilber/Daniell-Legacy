@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Daniell.SaveSystem.Examples
+namespace Daniell.Runtime.Save.Examples
 {
     /// <summary>
     /// Example of a full custom implementation of the Save System

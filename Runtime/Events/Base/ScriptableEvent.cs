@@ -1,8 +1,7 @@
-﻿using Daniell.EventSystem.Components;
-using System;
+﻿using System;
 using UnityEngine;
 
-namespace Daniell.EventSystem.Scriptable
+namespace Daniell.Runtime.Events
 {
     /// <summary>
     /// Event that can be saved and referenced

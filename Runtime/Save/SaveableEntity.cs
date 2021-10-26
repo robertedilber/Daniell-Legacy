@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Daniell.SaveSystem
+namespace Daniell.Runtime.Save
 {
     /// <summary>
     /// Handles loading and saving data

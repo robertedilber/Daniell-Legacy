@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Daniell.Runtime.Localization;
+using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Daniell.LocalizationSystem.Editor
+namespace Daniell.Editor.Localization
 {
     [CustomPropertyDrawer(typeof(LocalizedString))]
     public class LocalizedStringDrawer : PropertyDrawer

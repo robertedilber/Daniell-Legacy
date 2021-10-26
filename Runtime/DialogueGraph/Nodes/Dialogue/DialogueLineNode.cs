@@ -1,47 +1,49 @@
-﻿using Daniell.DialogSystem;
+﻿using System;
 using UnityEngine;
-using System;
 using Object = UnityEngine.Object;
 
-public class DialogueLineNode : GraphNode
+namespace Daniell.Runtime.DialogueNodes
 {
-    public const string SPEAKER_FIELD_NAME = "Speaker";
-    public const string LINE_FIELD_NAME = "Line";
-    public const string EMOTION_FIELD_NAME = "Emotion";
-
-    protected override Color DefaultNodeColor => new Color32(150, 70, 80, 255);
-    protected override string DefaultNodeName => "Dialogue Line";
-    protected override Type DataType => typeof(DialogueLineNodeData);
-
-    public DialogueLineNode()
+    public class DialogueLineNode : GraphNode
     {
-        // Add output
-        AddOutputPort("Next");
+        public const string SPEAKER_FIELD_NAME = "Speaker";
+        public const string LINE_FIELD_NAME = "Line";
+        public const string EMOTION_FIELD_NAME = "Emotion";
 
-        // Add parameter fields and link to variables
-        AddField(new ObjectNodeField<Character>("Speaker"), SPEAKER_FIELD_NAME);
-        AddField(new StringNodeField("Line", true), LINE_FIELD_NAME);
-    }
+        protected override Color DefaultNodeColor => new Color32(150, 70, 80, 255);
+        protected override string DefaultNodeName => "Dialogue Line";
+        protected override Type DataType => typeof(DialogueLineNodeData);
 
-    public override GraphNodeData ToNodeData()
-    {
-        // Cast base node data into concrete type
-        DialogueLineNodeData nodeData = (DialogueLineNodeData)base.ToNodeData();
+        public DialogueLineNode()
+        {
+            // Add output
+            AddOutputPort("Next");
 
-        // Assign speaker and line values from node fields
-        nodeData.Speaker = (Character)GetFieldValue<Object>(SPEAKER_FIELD_NAME);
-        nodeData.Line = GetFieldValue<string>(LINE_FIELD_NAME);
+            // Add parameter fields and link to variables
+            AddField(new ObjectNodeField<Character>("Speaker"), SPEAKER_FIELD_NAME);
+            AddField(new StringNodeField("Line", true), LINE_FIELD_NAME);
+        }
 
-        return nodeData;
-    }
+        public override GraphNodeData ToNodeData()
+        {
+            // Cast base node data into concrete type
+            DialogueLineNodeData nodeData = (DialogueLineNodeData)base.ToNodeData();
 
-    public override void FromNodeData(GraphNodeData nodeData)
-    {
-        base.FromNodeData(nodeData);
-        var data = (DialogueLineNodeData)nodeData;
+            // Assign speaker and line values from node fields
+            nodeData.Speaker = (Character)GetFieldValue<Object>(SPEAKER_FIELD_NAME);
+            nodeData.Line = GetFieldValue<string>(LINE_FIELD_NAME);
 
-        // Set node data
-        SetFieldValue<Object>(SPEAKER_FIELD_NAME, data.Speaker);
-        SetFieldValue(LINE_FIELD_NAME, data.Line);
+            return nodeData;
+        }
+
+        public override void FromNodeData(GraphNodeData nodeData)
+        {
+            base.FromNodeData(nodeData);
+            var data = (DialogueLineNodeData)nodeData;
+
+            // Set node data
+            SetFieldValue<Object>(SPEAKER_FIELD_NAME, data.Speaker);
+            SetFieldValue(LINE_FIELD_NAME, data.Line);
+        }
     }
 }

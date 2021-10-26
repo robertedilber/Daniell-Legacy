@@ -4,74 +4,77 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DialogueReader : MonoBehaviour
+namespace Daniell.Runtime.DialogueNodes
 {
-    public DialogueFile _dialogueFile;
-
-    GraphNodeData startNode;
-    GraphNodeData currentNode;
-
-    public event Action OnDialogueStart;
-    public event Action OnDialogueEnd;
-
-    public void InitializeDialogue(DialogueFile dialogueFile)
+    public class DialogueReader : MonoBehaviour
     {
-        _dialogueFile = dialogueFile;
+        public DialogueFile _dialogueFile;
 
-        // Call on dialogue start
-        OnDialogueStart?.Invoke();
-        startNode = _dialogueFile.GetStartNode();
-        currentNode = startNode;
+        GraphNodeData startNode;
+        GraphNodeData currentNode;
 
-        // Call next
-        Next();
-    }
+        public event Action OnDialogueStart;
+        public event Action OnDialogueEnd;
 
-    public bool Next()
-    {
-        // Return if there is no dialogue file loaded.
-        if (_dialogueFile == null)
+        public void InitializeDialogue(DialogueFile dialogueFile)
         {
-            Debug.LogWarning("Dialogue file not loaded. Call 'InitializeDialogue()' first.");
+            _dialogueFile = dialogueFile;
+
+            // Call on dialogue start
+            OnDialogueStart?.Invoke();
+            startNode = _dialogueFile.GetStartNode();
+            currentNode = startNode;
+
+            // Call next
+            Next();
+        }
+
+        public bool Next()
+        {
+            // Return if there is no dialogue file loaded.
+            if (_dialogueFile == null)
+            {
+                Debug.LogWarning("Dialogue file not loaded. Call 'InitializeDialogue()' first.");
+                return false;
+            }
+
+            if (currentNode != null)
+            {
+                ProcessNode(currentNode);
+
+                // Go to the next node
+                _dialogueFile.TryGetNextNodeData(currentNode, out GraphNodeData nextNode);
+
+                currentNode = nextNode;
+                return true;
+            }
+
+            // End dialogue
+            OnDialogueEnd?.Invoke();
+
             return false;
         }
 
-        if (currentNode != null)
+        protected virtual void ProcessNode(GraphNodeData graphNodeData)
         {
-            ProcessNode(currentNode);
-
-            // Go to the next node
-            _dialogueFile.TryGetNextNodeData(currentNode, out GraphNodeData nextNode);
-
-            currentNode = nextNode;
-            return true;
+            switch (graphNodeData)
+            {
+                case DialogueLineNodeData dialogueLineNodeData:
+                    Debug.Log(dialogueLineNodeData.Line);
+                    break;
+            }
         }
 
-        // End dialogue
-        OnDialogueEnd?.Invoke();
-
-        return false;
-    }
-
-    protected virtual void ProcessNode(GraphNodeData graphNodeData)
-    {
-        switch (graphNodeData)
+        protected virtual void SendDataToCurrentNode()
         {
-            case DialogueLineNodeData dialogueLineNodeData:
-                Debug.Log(dialogueLineNodeData.Line);
-                break;
+
         }
+
+        private void Start()
+        {
+            InitializeDialogue(_dialogueFile);
+        }
+
+        void OnInteract() => Next();
     }
-
-    protected virtual void SendDataToCurrentNode()
-    {
-
-    }
-
-    private void Start()
-    {
-        InitializeDialogue(_dialogueFile);
-    }
-
-    void OnInteract() => Next();
 }

@@ -4,7 +4,7 @@
 using UnityEditor;
 #endif
 
-namespace Daniell.SaveSystem
+namespace Daniell.Runtime.Save
 {
     /// <summary>
     /// Handles global loading and saving of the game state

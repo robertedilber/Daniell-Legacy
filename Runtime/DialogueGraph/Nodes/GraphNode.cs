@@ -5,85 +5,88 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-/// <summary>
-/// A Node that can be added to a graphview
-/// </summary>
-public abstract class GraphNode : BaseNode
+namespace Daniell.Runtime.DialogueNodes
 {
     /// <summary>
-    /// Default name of the input port
+    /// A Node that can be added to a graphview
     /// </summary>
-    public const string DEFAULT_INPUT_NAME = "Input";
-
-    /// <summary>
-    /// GUID of the node
-    /// </summary>
-    public string GUID { get; private set; }
-
-    /// <summary>
-    /// Type of Node Data to be used. 
-    /// </summary>
-    protected virtual Type DataType => typeof(GraphNodeData);
-
-    public GraphNode()
+    public abstract class GraphNode : BaseNode
     {
-        // Create a new GUID
-        GUID = Guid.NewGuid().ToString();
+        /// <summary>
+        /// Default name of the input port
+        /// </summary>
+        public const string DEFAULT_INPUT_NAME = "Input";
 
-        // Add the default input port
-        AddInputPort(DEFAULT_INPUT_NAME);
-    }
+        /// <summary>
+        /// GUID of the node
+        /// </summary>
+        public string GUID { get; private set; }
 
-    #region Save & Load
+        /// <summary>
+        /// Type of Node Data to be used. 
+        /// </summary>
+        protected virtual Type DataType => typeof(GraphNodeData);
 
-    public virtual GraphNodeData ToNodeData()
-    {
-        if (!DataType.IsSubclassOf(typeof(GraphNodeData)))
+        public GraphNode()
         {
-            Debug.LogWarning($"{DataType} is not a valid type for {GetType()} data. Node wasn't saved.");
-            return null;
+            // Create a new GUID
+            GUID = Guid.NewGuid().ToString();
+
+            // Add the default input port
+            AddInputPort(DEFAULT_INPUT_NAME);
         }
 
-        // Create a scriptable instance of NodeData
-        GraphNodeData nodeData = (GraphNodeData)ScriptableObject.CreateInstance(DataType);
+        #region Save & Load
 
-        Rect nodePosition = GetPosition();
+        public virtual GraphNodeData ToNodeData()
+        {
+            if (!DataType.IsSubclassOf(typeof(GraphNodeData)))
+            {
+                Debug.LogWarning($"{DataType} is not a valid type for {GetType()} data. Node wasn't saved.");
+                return null;
+            }
 
-        // Assign node position
-        nodeData.X = (int)nodePosition.x;
-        nodeData.Y = (int)nodePosition.y;
+            // Create a scriptable instance of NodeData
+            GraphNodeData nodeData = (GraphNodeData)ScriptableObject.CreateInstance(DataType);
 
-        // Set type
-        nodeData.NodeTypeName = GetType().AssemblyQualifiedName;
+            Rect nodePosition = GetPosition();
 
-        // Assign GUID
-        nodeData.GUID = GUID;
+            // Assign node position
+            nodeData.X = (int)nodePosition.x;
+            nodeData.Y = (int)nodePosition.y;
 
-        // Assign connected GUIDs
-        nodeData.ConnectedGUIDs = GetConnectedGUIDs();
+            // Set type
+            nodeData.NodeTypeName = GetType().AssemblyQualifiedName;
 
-        return nodeData;
+            // Assign GUID
+            nodeData.GUID = GUID;
+
+            // Assign connected GUIDs
+            nodeData.ConnectedGUIDs = GetConnectedGUIDs();
+
+            return nodeData;
+        }
+
+        public virtual void FromNodeData(GraphNodeData nodeData)
+        {
+            // Set node position
+            SetPosition(nodeData.X, nodeData.Y);
+
+            // Update GUID
+            GUID = nodeData.GUID;
+        }
+
+        #endregion
     }
 
-    public virtual void FromNodeData(GraphNodeData nodeData)
+    public class CommentNode : BaseNode
     {
-        // Set node position
-        SetPosition(nodeData.X, nodeData.Y);
+        protected override Color DefaultNodeColor => new Color32(80, 120, 113, 150);
+        protected override string DefaultNodeName => "Comment";
 
-        // Update GUID
-        GUID = nodeData.GUID;
-    }
-
-    #endregion
-}
-
-public class CommentNode : BaseNode
-{
-    protected override Color DefaultNodeColor => new Color32(80, 120, 113, 150);
-    protected override string DefaultNodeName => "Comment";
-
-    public CommentNode()
-    {
-        AddField(new StringNodeField("Comment", true), "field");
+        public CommentNode()
+        {
+            AddField(new StringNodeField("Comment", true), "field");
+        }
     }
 }

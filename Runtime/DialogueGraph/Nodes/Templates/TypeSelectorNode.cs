@@ -3,76 +3,79 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
-public abstract class TypeSelectorNode : GraphNode
+namespace Daniell.Runtime.DialogueNodes
 {
-    public enum E_NodeType
+    public abstract class TypeSelectorNode : GraphNode
     {
-        Bool,
-        String,
-        Float,
-        Int
-    }
-
-    public E_NodeType SelectedType { get; private set; }
-
-    protected override string DefaultNodeName => "";
-
-    public TypeSelectorNode()
-    {
-        PopupField<string> typeSelector = new PopupField<string>(new List<string> { "Bool", "String", "Float", "Int" }, 0);
-        typeSelector.RegisterValueChangedCallback((x) => SelectType(x.newValue));
-
-        typeSelector.style.width = 100;
-        typeSelector.style.height = 30;
-        typeSelector.style.marginTop = 3;
-        typeSelector.style.marginRight = 3;
-
-        titleContainer.Add(typeSelector);
-    }
-
-    public void SelectType(string type)
-    {
-        ClearContent();
-        title = GetName(SelectedType.ToString());
-
-        switch (type)
+        public enum E_NodeType
         {
-            case "Bool":
-                SetBool();
-                break;
-            case "String":
-                SetString();
-                break;
-            case "Float":
-                SetFloat();
-                break;
-            case "Int":
-                SetInt();
-                break;
+            Bool,
+            String,
+            Float,
+            Int
         }
-    }
 
-    protected abstract string GetName(string type);
+        public E_NodeType SelectedType { get; private set; }
 
-    protected virtual void ClearContent() { }
+        protected override string DefaultNodeName => "";
 
-    protected virtual void SetBool()
-    {
-        SelectedType = E_NodeType.Bool;
-    }
+        public TypeSelectorNode()
+        {
+            PopupField<string> typeSelector = new PopupField<string>(new List<string> { "Bool", "String", "Float", "Int" }, 0);
+            typeSelector.RegisterValueChangedCallback((x) => SelectType(x.newValue));
 
-    protected virtual void SetString()
-    {
-        SelectedType = E_NodeType.String;
-    }
+            typeSelector.style.width = 100;
+            typeSelector.style.height = 30;
+            typeSelector.style.marginTop = 3;
+            typeSelector.style.marginRight = 3;
 
-    protected virtual void SetFloat()
-    {
-        SelectedType = E_NodeType.Float;
-    }
+            titleContainer.Add(typeSelector);
+        }
 
-    protected virtual void SetInt()
-    {
-        SelectedType = E_NodeType.Int;
+        public void SelectType(string type)
+        {
+            ClearContent();
+            title = GetName(SelectedType.ToString());
+
+            switch (type)
+            {
+                case "Bool":
+                    SetBool();
+                    break;
+                case "String":
+                    SetString();
+                    break;
+                case "Float":
+                    SetFloat();
+                    break;
+                case "Int":
+                    SetInt();
+                    break;
+            }
+        }
+
+        protected abstract string GetName(string type);
+
+        protected virtual void ClearContent() { }
+
+        protected virtual void SetBool()
+        {
+            SelectedType = E_NodeType.Bool;
+        }
+
+        protected virtual void SetString()
+        {
+            SelectedType = E_NodeType.String;
+        }
+
+        protected virtual void SetFloat()
+        {
+            SelectedType = E_NodeType.Float;
+        }
+
+        protected virtual void SetInt()
+        {
+            SelectedType = E_NodeType.Int;
+        }
     }
 }

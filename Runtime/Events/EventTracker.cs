@@ -1,9 +1,8 @@
-﻿using Daniell.EventSystem.Scriptable;
-using Daniell.Singletons;
+﻿using Daniell.Runtime.Singletons;
 using System.Collections;
 using UnityEngine;
 
-namespace Daniell.EventSystem.Components
+namespace Daniell.Runtime.Events
 {
     /// <summary>
     /// Allows events to retrieve their values from the curent frame
@@ -16,14 +15,10 @@ namespace Daniell.EventSystem.Components
         /// <param name="scriptableEvent">Event to be reset</param>
         public static void RegisterEventForReset(ScriptableEvent scriptableEvent)
         {
-            if (Instance != null)
+            DelayedInstanceCall(instance =>
             {
-                Instance.StartCoroutine(ResetOnEndOfFrame());
-            }
-            else
-            {
-                throw new System.Exception("Event Tracker is not yet ready");
-            }
+                instance.StartCoroutine(ResetOnEndOfFrame());
+            });
 
             IEnumerator ResetOnEndOfFrame()
             {

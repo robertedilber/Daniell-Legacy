@@ -2,23 +2,26 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-/// <summary>
-/// Node used as a starting point of every dialogue graph
-/// </summary>
-public class StartNode : BaseNode
+namespace Daniell.Runtime.DialogueNodes
 {
-    protected override Color DefaultNodeColor => new Color(0.15f, 0.43f, 0.12f);
-    protected override string DefaultNodeName => "Start";
-
-    public StartNode()
+    /// <summary>
+    /// Node used as a starting point of every dialogue graph
+    /// </summary>
+    public class StartNode : BaseNode
     {
-        // Add a single output port to the start node
-        AddOutputPort("Next");
+        protected override Color DefaultNodeColor => new Color(0.15f, 0.43f, 0.12f);
+        protected override string DefaultNodeName => "Start";
 
-        SetWidth(75);
+        public StartNode()
+        {
+            // Add a single output port to the start node
+            AddOutputPort("Next");
+
+            SetWidth(75);
+        }
+
+        public override bool IsMovable() => false;
+
+        public override bool IsSelectable() => false;
     }
-
-    public override bool IsMovable() => false;
-
-    public override bool IsSelectable() => false;
 }

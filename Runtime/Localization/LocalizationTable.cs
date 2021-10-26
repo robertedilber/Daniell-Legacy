@@ -1,13 +1,12 @@
-﻿using Daniell.GoogleSheetDownloader;
-using Daniell.Helpers.DataStructures;
+﻿using Daniell.Runtime.Helpers.DataStructures;
+using Daniell.Runtime.WebServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Daniell.LocalizationSystem
+namespace Daniell.Runtime.Localization
 {
     /// <summary>
     /// List of Keys and translation in every supported languages.

@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Daniell.Runtime.Save;
 using UnityEditor;
 using UnityEngine;
 
-namespace Daniell.SaveSystem.Editor
+namespace Daniell.Editor.Save
 {
     /// <summary>
     /// Custom Drawer for SaveableEntities

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Daniell.LocalizationSystem
+namespace Daniell.Runtime.Localization
 {
     /// <summary>
     /// Static helper to manage current language.

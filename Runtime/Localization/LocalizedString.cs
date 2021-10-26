@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Daniell.LocalizationSystem
+namespace Daniell.Runtime.Localization
 {
     /// <summary>
     /// String container that will return its content in the current language.

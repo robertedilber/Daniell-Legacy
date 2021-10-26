@@ -1,14 +1,17 @@
 ﻿using UnityEditor.Experimental.GraphView;
 
-public abstract class ParameterNode : TypeSelectorNode
+namespace Daniell.Runtime.DialogueNodes
 {
-    public const string PARAMETER_FIELD_NAME = "Parameter Name";
-
-    public ParameterNode()
+    public abstract class ParameterNode : TypeSelectorNode
     {
-        // Parameter Name
-        AddField(new StringNodeField("Parameter Name", false), PARAMETER_FIELD_NAME);
+        public const string PARAMETER_FIELD_NAME = "Parameter Name";
 
-        SelectType("Bool");
+        public ParameterNode()
+        {
+            // Parameter Name
+            AddField(new StringNodeField("Parameter Name", false), PARAMETER_FIELD_NAME);
+
+            SelectType("Bool");
+        }
     }
 }

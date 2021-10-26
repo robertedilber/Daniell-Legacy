@@ -3,65 +3,66 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class GetParameterNode : ParameterNode
+namespace Daniell.Runtime.DialogueNodes
 {
-    public const string COMPARATOR_FIELD_NAME = "Comparator Value";
-
-    protected override Color DefaultNodeColor => new Color32(80, 100, 201, 255);
-    protected override Type DataType => typeof(GetParameterNodeData);
-
-    private List<Port> _outputPorts = new List<Port>();
-
-    protected override string GetName(string type)
+    public class GetParameterNode : ParameterNode
     {
-        return $"Get {type} Parameter";
-    }
+        public const string COMPARATOR_FIELD_NAME = "Comparator Value";
 
-    protected override void ClearContent()
-    {
-        base.ClearContent();
-        foreach(var port in _outputPorts)
+        protected override Color DefaultNodeColor => new Color32(80, 100, 201, 255);
+        protected override Type DataType => typeof(GetParameterNodeData);
+
+        private List<Port> _outputPorts = new List<Port>();
+
+        protected override string GetName(string type)
         {
-            RemovePort(port.portName, port.direction);
+            return $"Get {type} Parameter";
         }
 
-        _outputPorts.Clear();
+        protected override void ClearContent()
+        {
+            base.ClearContent();
+            foreach (var port in _outputPorts)
+            {
+                RemovePort(port.portName, port.direction);
+            }
 
-        RemoveField(COMPARATOR_FIELD_NAME);
-    }
+            _outputPorts.Clear();
 
-    protected override void SetBool()
-    {
-        base.SetBool();
-        _outputPorts.Add(AddOutputPort("True"));
-        _outputPorts.Add(AddOutputPort("False"));
-    }
+            RemoveField(COMPARATOR_FIELD_NAME);
+        }
 
-    protected override void SetString()
-    {
-        base.SetString();
-        AddField(new StringNodeField("Comparator", false), COMPARATOR_FIELD_NAME);
-        _outputPorts.Add(AddOutputPort("=="));
-        _outputPorts.Add(AddOutputPort("!="));
-    }
+        protected override void SetBool()
+        {
+            base.SetBool();
+            _outputPorts.Add(AddOutputPort("True"));
+            _outputPorts.Add(AddOutputPort("False"));
+        }
 
-    protected override void SetFloat()
-    {
-        base.SetFloat();
-        AddField(new IntNodeField("Comparator"), COMPARATOR_FIELD_NAME);
-        _outputPorts.Add(AddOutputPort("=="));
-        _outputPorts.Add(AddOutputPort(">"));
-        _outputPorts.Add(AddOutputPort("<"));
-    }
+        protected override void SetString()
+        {
+            base.SetString();
+            AddField(new StringNodeField("Comparator", false), COMPARATOR_FIELD_NAME);
+            _outputPorts.Add(AddOutputPort("=="));
+            _outputPorts.Add(AddOutputPort("!="));
+        }
 
-    protected override void SetInt()
-    {
-        base.SetInt();
-        AddField(new IntNodeField("Comparator"), COMPARATOR_FIELD_NAME);
-        _outputPorts.Add(AddOutputPort("=="));
-        _outputPorts.Add(AddOutputPort(">"));
-        _outputPorts.Add(AddOutputPort("<"));
+        protected override void SetFloat()
+        {
+            base.SetFloat();
+            AddField(new IntNodeField("Comparator"), COMPARATOR_FIELD_NAME);
+            _outputPorts.Add(AddOutputPort("=="));
+            _outputPorts.Add(AddOutputPort(">"));
+            _outputPorts.Add(AddOutputPort("<"));
+        }
+
+        protected override void SetInt()
+        {
+            base.SetInt();
+            AddField(new IntNodeField("Comparator"), COMPARATOR_FIELD_NAME);
+            _outputPorts.Add(AddOutputPort("=="));
+            _outputPorts.Add(AddOutputPort(">"));
+            _outputPorts.Add(AddOutputPort("<"));
+        }
     }
 }
-
-

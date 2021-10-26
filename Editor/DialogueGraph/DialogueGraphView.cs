@@ -1,3 +1,4 @@
+using Daniell.Runtime.DialogueNodes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,101 +8,104 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class DialogueGraphView : GraphView
+namespace Daniell.Editor.DialogueNodes
 {
-    private DialogueGraphSearchWindow _dialogueGraphSearchWindow;
-
-    public DialogueGraphView(string name, EditorWindow parent, DialogueFile dialogueFile)
+    public class DialogueGraphView : GraphView
     {
-        this.name = name;
+        private DialogueGraphSearchWindow _dialogueGraphSearchWindow;
 
-        this.AddManipulator(new ContentDragger());
-        this.AddManipulator(new SelectionDragger());
-        this.AddManipulator(new RectangleSelector());
-
-        // Add zoom capabilities
-        SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-
-        // Add a grid background
-        GridBackground gridBackground = new GridBackground();
-        Insert(0, gridBackground);
-        gridBackground.StretchToParentSize();
-
-        styleSheets.Add(Resources.Load<StyleSheet>("DialogGraph"));
-        // Create the start node
-        CreateNode<StartNode>();
-
-        _dialogueGraphSearchWindow = ScriptableObject.CreateInstance<DialogueGraphSearchWindow>();
-        _dialogueGraphSearchWindow.Initialize(parent, this, dialogueFile.GetValidNodeTypes());
-        nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _dialogueGraphSearchWindow);
-    }
-
-    public BaseNode CreateNode<T>() where T : BaseNode, new()
-    {
-        BaseNode node = new T();
-        AddElement(node);
-        node.OnNodeUpdated += Test;
-        return node;
-    }
-
-    private void Test()
-    {
-        Debug.Log("Hello World");
-    }
-
-    public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-    {
-        List<Port> compatiblePorts = new List<Port>();
-
-        ports.ForEach(port =>
+        public DialogueGraphView(string name, EditorWindow parent, DialogueFile dialogueFile)
         {
-            if (startPort != port && startPort.node != port.node && startPort.direction != port.direction)
-            {
-                compatiblePorts.Add(port);
-            }
-        });
+            this.name = name;
 
-        return compatiblePorts;
-    }
+            this.AddManipulator(new ContentDragger());
+            this.AddManipulator(new SelectionDragger());
+            this.AddManipulator(new RectangleSelector());
 
-    public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
-    {
-        evt.menu.AppendAction("Duplicate", (e) =>
+            // Add zoom capabilities
+            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+
+            // Add a grid background
+            GridBackground gridBackground = new GridBackground();
+            Insert(0, gridBackground);
+            gridBackground.StretchToParentSize();
+
+            styleSheets.Add(Resources.Load<StyleSheet>("DialogGraph"));
+            // Create the start node
+            CreateNode<StartNode>();
+
+            _dialogueGraphSearchWindow = ScriptableObject.CreateInstance<DialogueGraphSearchWindow>();
+            _dialogueGraphSearchWindow.Initialize(parent, this, dialogueFile.GetValidNodeTypes());
+            nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _dialogueGraphSearchWindow);
+        }
+
+        public BaseNode CreateNode<T>() where T : BaseNode, new()
         {
-            // Get middle point
-            Vector2 center = Vector2.zero;
-            int count = 0;
-            foreach (ISelectable selectable in selection.Where(x => x is GraphNode))
+            BaseNode node = new T();
+            AddElement(node);
+            node.OnNodeUpdated += Test;
+            return node;
+        }
+
+        private void Test()
+        {
+            Debug.Log("Hello World");
+        }
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            List<Port> compatiblePorts = new List<Port>();
+
+            ports.ForEach(port =>
             {
-                center += ((GraphNode)selectable).GetPosition().position;
-                count++;
-            }
-            center /= count;
+                if (startPort != port && startPort.node != port.node && startPort.direction != port.direction)
+                {
+                    compatiblePorts.Add(port);
+                }
+            });
 
-            // Get Selection
-            foreach (ISelectable selectable in selection.Where(x => x is GraphNode))
+            return compatiblePorts;
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            evt.menu.AppendAction("Duplicate", (e) =>
             {
-                var graphNode = (GraphNode)selectable;
+                // Get middle point
+                Vector2 center = Vector2.zero;
+                int count = 0;
+                foreach (ISelectable selectable in selection.Where(x => x is GraphNode))
+                {
+                    center += ((GraphNode)selectable).GetPosition().position;
+                    count++;
+                }
+                center /= count;
 
-                var nodeData = graphNode.ToNodeData();
+                // Get Selection
+                foreach (ISelectable selectable in selection.Where(x => x is GraphNode))
+                {
+                    var graphNode = (GraphNode)selectable;
 
-                // Instantiate node using reflection
-                var method = typeof(DialogueGraphView).GetMethod(nameof(DialogueGraphView.CreateNode));
-                var action = method.MakeGenericMethod(Type.GetType(nodeData.NodeTypeName));
-                var node = action.Invoke(this, null);
+                    var nodeData = graphNode.ToNodeData();
 
-                // Load node data
-                var createdNode = (GraphNode)node;
-                createdNode.FromNodeData(nodeData);
+                    // Instantiate node using reflection
+                    var method = typeof(DialogueGraphView).GetMethod(nameof(DialogueGraphView.CreateNode));
+                    var action = method.MakeGenericMethod(Type.GetType(nodeData.NodeTypeName));
+                    var node = action.Invoke(this, null);
 
-                // Get node position
-                var nodePosition = graphNode.GetPosition().position;
-                var mousePosition = e.eventInfo.mousePosition;
+                    // Load node data
+                    var createdNode = (GraphNode)node;
+                    createdNode.FromNodeData(nodeData);
 
-                nodePosition += mousePosition - center;
+                    // Get node position
+                    var nodePosition = graphNode.GetPosition().position;
+                    var mousePosition = e.eventInfo.mousePosition;
 
-                createdNode.SetPosition((int)nodePosition.x, (int)nodePosition.y);
-            }
-        });
+                    nodePosition += mousePosition - center;
+
+                    createdNode.SetPosition((int)nodePosition.x, (int)nodePosition.y);
+                }
+            });
+        }
     }
 }

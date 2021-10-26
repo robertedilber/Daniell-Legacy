@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Daniell.Coroutines
+namespace Daniell.Runtime.Coroutines
 {
     /// <summary>
     /// Templates for coroutine

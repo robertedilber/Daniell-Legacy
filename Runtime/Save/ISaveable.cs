@@ -1,4 +1,4 @@
-﻿namespace Daniell.SaveSystem
+﻿namespace Daniell.Runtime.Save
 {
     /// <summary>
     /// Represents an object that can be saved

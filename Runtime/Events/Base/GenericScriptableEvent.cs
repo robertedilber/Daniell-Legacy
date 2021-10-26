@@ -1,7 +1,6 @@
-﻿using Daniell.EventSystem.Components;
-using System;
+﻿using System;
 
-namespace Daniell.EventSystem.Scriptable
+namespace Daniell.Runtime.Events
 {
     /// <summary>
     /// Generic event that can be saved and referenced
@@ -28,7 +27,12 @@ namespace Daniell.EventSystem.Scriptable
             IsActive = true;
             _activeValue = value;
             _event?.Invoke(value);
-            EventTracker.RegisterEventForReset(this);
+
+            // If the event tracker exists, find register this event for reset
+            if (EventTracker.IsInstanceReady)
+            {
+                EventTracker.RegisterEventForReset(this);
+            }
         }
 
         /// <summary>

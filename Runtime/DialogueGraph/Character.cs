@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Daniell.DialogSystem
+namespace Daniell.Runtime.DialogueNodes
 {
     [CreateAssetMenu(fileName = "Test Character", menuName = "Character")]
     public class Character : ScriptableObject

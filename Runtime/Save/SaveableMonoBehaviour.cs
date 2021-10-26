@@ -1,8 +1,6 @@
-﻿using Daniell.Coroutines;
-using Daniell.EventSystem.Scriptable;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Daniell.SaveSystem
+namespace Daniell.Runtime.Save
 {
     /// <summary>
     /// MonoBehaviour Implementation of the Save System

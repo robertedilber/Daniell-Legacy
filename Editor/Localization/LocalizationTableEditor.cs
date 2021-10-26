@@ -1,10 +1,9 @@
-﻿using Daniell.GoogleSheetDownloader;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Daniell.Runtime.Localization;
+using Daniell.Runtime.WebServices;
 using UnityEditor;
 using UnityEngine;
 
-namespace Daniell.LocalizationSystem.Editor
+namespace Daniell.Editor.Localization
 {
     [CustomEditor(typeof(LocalizationTable))]
     public class LocalizationTableEditor : UnityEditor.Editor
