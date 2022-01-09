@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Daniell.Runtime.Save
@@ -30,7 +32,9 @@ namespace Daniell.Runtime.Save
             _registeredDataSavers.Remove(dataSaver);
         }
 
+#if UNITY_EDITOR
         [MenuItem("Daniell/Save System/Load")]
+#endif
         public static void Load()
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -60,7 +64,9 @@ namespace Daniell.Runtime.Save
             }
         }
 
+#if UNITY_EDITOR
         [MenuItem("Daniell/Save System/Save")]
+#endif
         public static void Save()
         {
             List<DataSaverContent> dataSaverContent = new List<DataSaverContent>();
