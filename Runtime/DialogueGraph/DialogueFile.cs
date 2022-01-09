@@ -1,4 +1,4 @@
-﻿using Daniell.Runtime.Helpers.DataStructures;
+﻿using Daniell.Runtime.DataStructures;
 using System;
 using System.Collections.Generic;
 using UnityEditor;

@@ -22,7 +22,7 @@ namespace Daniell.Runtime.Events
         /// Raise event with value of type T
         /// </summary>
         /// <param name="value">Value of the event</param>
-        public void Raise(T value)
+        public virtual void Raise(T value)
         {
             IsActive = true;
             _activeValue = value;

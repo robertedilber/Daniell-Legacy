@@ -27,7 +27,7 @@ namespace Daniell.Runtime.Events
         /// <summary>
         /// Raise void event
         /// </summary>
-        public void Raise()
+        public virtual void Raise()
         {
             IsActive = true;
             _event?.Invoke();

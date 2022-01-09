@@ -1,4 +1,4 @@
-using Daniell.EventSystem.Scriptable;
+using Daniell.Runtime.Events;
 using NUnit.Framework;
 using UnityEngine;
 

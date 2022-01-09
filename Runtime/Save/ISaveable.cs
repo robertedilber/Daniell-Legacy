@@ -1,13 +1,25 @@
 ﻿namespace Daniell.Runtime.Save
 {
     /// <summary>
-    /// Represents an object that can be saved
+    /// Object that can be saved
     /// </summary>
     public interface ISaveable
     {
         /// <summary>
-        /// Generic SaveableEntity used by the SaveManager
+        /// Unique ID for this object
         /// </summary>
-        SaveableEntity SaveableEntity { get; }
+        string GUID { get; }
+
+        /// <summary>
+        /// Load currently saved data
+        /// </summary>
+        /// <param name="saveDataContainer">Container for the data</param>
+        void Load(SaveDataContainer saveDataContainer);
+
+        /// <summary>
+        /// Save currently loaded data
+        /// </summary>
+        /// <param name="saveDataContainer">Container for the data</param>
+        void Save(SaveDataContainer saveDataContainer);
     }
 }

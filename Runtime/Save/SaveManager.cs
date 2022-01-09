@@ -1,76 +1,87 @@
-﻿using System.Collections.Generic;
-
-#if UNITY_EDITOR
+﻿using Daniell.Runtime.DataStructures;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
-#endif
+using UnityEngine;
 
 namespace Daniell.Runtime.Save
 {
-    /// <summary>
-    /// Handles global loading and saving of the game state
-    /// </summary>
     public static class SaveManager
     {
-        private static List<ISaveable> _saveables = new List<ISaveable>();
-
-        /// <summary>
-        /// Add a saveable object to the list of saveable objects
-        /// </summary>
-        /// <param name="saveable">Object to add</param>
-        public static void Register(ISaveable saveable)
+        [System.Serializable]
+        private struct DataSaverContent
         {
-            _saveables.Add(saveable);
+            public string guid;
+            public SaveDataContainer[] saveDataContainers;
         }
 
-        /// <summary>
-        /// Remove a saveable object from the list of saveable objects
-        /// </summary>
-        /// <param name="saveable">Object to remove</param>
-        public static void Unregister(ISaveable saveable)
+        private static List<DataSaver> _registeredDataSavers = new List<DataSaver>();
+
+        public static void Register(DataSaver dataSaver)
         {
-            _saveables.Remove(saveable);
+            _registeredDataSavers.Add(dataSaver);
         }
 
-        /// <summary>
-        /// Save all data
-        /// </summary>
-#if UNITY_EDITOR
-        [MenuItem("Daniell/Save Manager/Save")]
-#endif
-        public static void Save()
+        public static void Unregister(DataSaver dataSaver)
         {
-            for (int i = 0; i < _saveables.Count; i++)
-            {
-                _saveables[i].SaveableEntity.Save();
-            }
+            _registeredDataSavers.Remove(dataSaver);
         }
 
-        /// <summary>
-        /// Load all data
-        /// </summary>
-#if UNITY_EDITOR
-        [MenuItem("Daniell/Save Manager/Load")]
-#endif
+        [MenuItem("Daniell/Save System/Load")]
         public static void Load()
         {
-            for (int i = 0; i < _saveables.Count; i++)
+            BinaryFormatter formatter = new BinaryFormatter();
+            string path = $"{Application.persistentDataPath}/UserData.dat";
+
+            if (File.Exists(path))
             {
-                _saveables[i].SaveableEntity.Load();
+                FileStream stream = new FileStream(path, FileMode.Open);
+                var gameData = ((ValueWrapper<List<DataSaverContent>>)formatter.Deserialize(stream)).value;
+                stream.Close();
+
+                Dictionary<string, SaveDataContainer[]> dataSaverContents = new Dictionary<string, SaveDataContainer[]>();
+
+                for (int i = 0; i < gameData.Count; i++)
+                {
+                    DataSaverContent v = gameData[i];
+                    dataSaverContents.Add(v.guid, v.saveDataContainers);
+                }
+
+                for (int i = 0; i < _registeredDataSavers.Count; i++)
+                {
+                    var dataSaver = _registeredDataSavers[i];
+
+                    // Save data
+                    dataSaver.Load(dataSaverContents[dataSaver.GUID]);
+                }
             }
         }
 
-        /// <summary>
-        /// Clear all data
-        /// </summary>
-#if UNITY_EDITOR
-        [MenuItem("Daniell/Save Manager/Clear")]
-#endif
-        public static void Clear()
+        [MenuItem("Daniell/Save System/Save")]
+        public static void Save()
         {
-            for (int i = 0; i < _saveables.Count; i++)
+            List<DataSaverContent> dataSaverContent = new List<DataSaverContent>();
+
+            for (int i = 0; i < _registeredDataSavers.Count; i++)
             {
-                _saveables[i].SaveableEntity.Clear();
+                var dataSaver = _registeredDataSavers[i];
+
+                var listOfContainers = dataSaver.Save();
+                dataSaverContent.Add(new DataSaverContent() { guid = dataSaver.GUID, saveDataContainers = listOfContainers });
             }
+
+            var gameData = new ValueWrapper<List<DataSaverContent>>(dataSaverContent);
+
+            // Format in binary
+            BinaryFormatter formatter = new BinaryFormatter();
+            string path = $"{Application.persistentDataPath}/UserData.dat";
+
+            FileStream stream = new FileStream(path, FileMode.OpenOrCreate);
+            formatter.Serialize(stream, gameData);
+            stream.Close();
         }
     }
 }

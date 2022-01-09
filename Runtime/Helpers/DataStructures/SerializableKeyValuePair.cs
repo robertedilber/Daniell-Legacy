@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Daniell.Runtime.Helpers.DataStructures
+namespace Daniell.Runtime.DataStructures
 {
     /// <summary>
     /// A Serializable version of a KeyValuePair.
