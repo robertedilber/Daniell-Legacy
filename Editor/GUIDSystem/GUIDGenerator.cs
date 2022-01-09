@@ -30,6 +30,7 @@ namespace Daniell.Editor.GUIDSystem
                             foreach (var v in instances)
                             {
                                 field.SetValue(v, GenerateGUID());
+                                EditorUtility.SetDirty(v);
                                 generatedGUIDsLog += $"Generated new GUID for {v.name} -> {type.Name} Component\n";
                             }
                         }
