@@ -10,6 +10,7 @@ namespace Daniell.Runtime.Save
     /// <summary>
     /// Handles saving and loading various targets in a GameObject
     /// </summary>
+    [DefaultExecutionOrder(-5000)]
     public class DataSaver : MonoBehaviour
     {
         /* ==========================

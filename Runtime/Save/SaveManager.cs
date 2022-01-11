@@ -149,6 +149,11 @@ namespace Daniell.Runtime.Save
             return $"{SAVE_FILE_NAME_PREFIX}{sceneIndex}.{SAVE_FILE_EXTENSION}";
         }
 
+        private static string GetGameSettingsFilePath()
+        {
+            return $"{GetSaveFolderPath()}/{SETTINGS_FILE_NAME}";
+        }
+
         #endregion
 
         #region Read & Write Data to file
@@ -260,6 +265,11 @@ namespace Daniell.Runtime.Save
 
         #endregion
 
+        #region Save & Load Game Data
+
+        /// <summary>
+        /// Load all data from files
+        /// </summary>
 #if UNITY_EDITOR
         [MenuItem("Daniell/Save System/Load")]
 #endif
@@ -316,13 +326,17 @@ namespace Daniell.Runtime.Save
             if (globalDataSavers.Count > 0)
             {
                 var gameData = OpenSaveFile(GLOBAL_SAVE_FILE_NAME, SelectedSlot);
-                var dataAsDictionary = GetDataSaverDictionary(gameData);
 
-                for (int i = 0; i < globalDataSavers.Count; i++)
+                if (gameData.Length > 0)
                 {
-                    // Load data
-                    var dataSaver = globalDataSavers[i];
-                    dataSaver.Load(dataAsDictionary[dataSaver.GUID]);
+                    var dataAsDictionary = GetDataSaverDictionary(gameData);
+
+                    for (int i = 0; i < globalDataSavers.Count; i++)
+                    {
+                        // Load data
+                        var dataSaver = globalDataSavers[i];
+                        dataSaver.Load(dataAsDictionary[dataSaver.GUID]);
+                    }
                 }
             }
 
@@ -394,6 +408,22 @@ namespace Daniell.Runtime.Save
             }
         }
 
+        #endregion
+
+        #region Save & Load Game Settings
+
+        public static void SetGameSetting<T>(string settingID, T value)
+        {
+
+        }
+
+        public static T GetGameSetting<T>(string settingID)
+        {
+            return default;
+        }
+
+        #endregion
+
 #if UNITY_EDITOR
         [MenuItem("Daniell/Save System/Open Save Data Folder...")]
         public static void OpenSaveDataFolder()
@@ -401,6 +431,16 @@ namespace Daniell.Runtime.Save
             string path = GetSaveFolderPath();
             path = path.Replace(@"/", @"\");
             System.Diagnostics.Process.Start("explorer.exe", path);
+        }
+
+        [MenuItem("Daniell/Save System/Clear Save Data Folder")]
+        public static void ClearData()
+        {
+            var directory = GetSaveFolderPath();
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
         }
 #endif
     }
