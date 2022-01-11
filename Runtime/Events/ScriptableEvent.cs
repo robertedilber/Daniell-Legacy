@@ -14,50 +14,46 @@ namespace Daniell.Runtime.Events
         public const string MENU_PATH_BASE = "Events/";
 
         /// <summary>
-        /// Is this event currently active?
-        /// Used to retrieve current frame value
-        /// </summary>
-        public bool IsActive { get; protected set; }
-
-        /// <summary>
         /// Internal Event
         /// </summary>
-        private event Action _event;
+        private event Action OnEventRaised;
+
+#if UNITY_EDITOR
+
+        /// <summary>
+        /// Description of the event
+        /// </summary>
+        public string Description => _description;
+
+        [SerializeField]
+        [Tooltip("Description of the event")]
+        private string _description;
+#endif
 
         /// <summary>
         /// Raise void event
         /// </summary>
         public virtual void Raise()
         {
-            IsActive = true;
-            _event?.Invoke();
-            EventTracker.RegisterEventForReset(this);
-        }
-
-        /// <summary>
-        /// Reset value retriever
-        /// </summary>
-        public virtual void Reset()
-        {
-            IsActive = false;
+            OnEventRaised?.Invoke();
         }
 
         /// <summary>
         /// Add a new listener to the event
         /// </summary>
         /// <param name="action">Delegate to subscribe</param>
-        /// <param name="retrieveLast">Should this event be triggered if subscribed at the same frame?</param>
-        public void AddListener(Action action, bool retrieveLast = true)
+        public void AddListener(Action action)
         {
-            _event += action;
-            if (retrieveLast && IsActive)
-                action?.Invoke();
+            OnEventRaised += action;
         }
 
         /// <summary>
         /// Remove a listener from the event
         /// </summary>
         /// <param name="action">Delegate to unsubscribe</param>
-        public void RemoveListener(Action action) => _event -= action;
+        public void RemoveListener(Action action)
+        {
+            OnEventRaised -= action;
+        }
     }
 }
