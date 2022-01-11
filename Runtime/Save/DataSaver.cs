@@ -21,6 +21,16 @@ namespace Daniell.Runtime.Save
         /// </summary>
         public string GUID => _GUID;
 
+        /// <summary>
+        /// Is this data saver used accross multiple scenes?
+        /// </summary>
+        public bool IsGlobal => _isGlobal;
+
+        /// <summary>
+        /// SceneID of this Data Saver
+        /// </summary>
+        public int SceneID => gameObject.scene.buildIndex;
+
 
         /* ==========================
          * > Private Serialized Fields
@@ -29,6 +39,10 @@ namespace Daniell.Runtime.Save
         [SerializeField]
         [GUID]
         private string _GUID;
+
+        [SerializeField]
+        [Tooltip("Is this data saver used accross multiple scenes?")]
+        private bool _isGlobal;
 
 
         /* ==========================

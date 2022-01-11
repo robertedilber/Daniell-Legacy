@@ -45,11 +45,14 @@ namespace Daniell.Runtime.Save
 
         public const string SAVE_FOLDER_PATH = "SaveFiles";
         public const string SLOTS_FOLDER_PATH = "Slots";
-        public const string SETTINGS_FILE_NAME = "GameSettings.json";
-        public const string SAVE_FILE_NAME_PREFIX = "SAVE_FILE_";
-        public const string SAVE_FILE_EXTENSION = "data";
+
         public const string DEFAULT_SLOT_NAME = "DEFAULT";
 
+        public const string SETTINGS_FILE_NAME = "GameSettings.json";
+
+        public const string SAVE_FILE_NAME_PREFIX = "SAVE_FILE_";
+        public const string GLOBAL_SAVE_FILE_NAME = "GLOBAL";
+        public const string SAVE_FILE_EXTENSION = "data";
 
         /* ==========================
          * > Properties
@@ -265,14 +268,23 @@ namespace Daniell.Runtime.Save
             // Get all scene IDs
             List<int> loadedSceneIDs = new List<int>();
 
+            List<DataSaver> globalDataSavers = new List<DataSaver>();
+
             for (int i = 0; i < _registeredDataSavers.Count; i++)
             {
                 var dataSaver = _registeredDataSavers[i];
-                var sceneID = dataSaver.gameObject.scene.buildIndex;
 
-                if (!loadedSceneIDs.Contains(sceneID))
+                if (dataSaver.IsGlobal)
                 {
-                    loadedSceneIDs.Add(sceneID);
+                    globalDataSavers.Add(dataSaver);
+                }
+                else
+                {
+                    var sceneID = dataSaver.SceneID;
+                    if (!loadedSceneIDs.Contains(sceneID))
+                    {
+                        loadedSceneIDs.Add(sceneID);
+                    }
                 }
             }
 
@@ -283,6 +295,39 @@ namespace Daniell.Runtime.Save
                 var saveFileName = GetSaveFileName(loadedSceneID);
                 var gameData = OpenSaveFile(saveFileName, SelectedSlot);
 
+                if (gameData.Length > 0)
+                {
+                    var dataAsDictionary = GetDataSaverDictionary(gameData);
+
+                    for (int j = 0; j < _registeredDataSavers.Count; j++)
+                    {
+                        var dataSaver = _registeredDataSavers[j];
+
+                        if (!dataSaver.IsGlobal && dataSaver.SceneID == loadedSceneID)
+                        {
+                            // Load data
+                            dataSaver.Load(dataAsDictionary[dataSaver.GUID]);
+                        }
+                    }
+                }
+            }
+
+            // Load global file
+            if (globalDataSavers.Count > 0)
+            {
+                var gameData = OpenSaveFile(GLOBAL_SAVE_FILE_NAME, SelectedSlot);
+                var dataAsDictionary = GetDataSaverDictionary(gameData);
+
+                for (int i = 0; i < globalDataSavers.Count; i++)
+                {
+                    // Load data
+                    var dataSaver = globalDataSavers[i];
+                    dataSaver.Load(dataAsDictionary[dataSaver.GUID]);
+                }
+            }
+
+            Dictionary<string, SaveDataContainer[]> GetDataSaverDictionary(DataSaverContent[] gameData)
+            {
                 Dictionary<string, SaveDataContainer[]> dataSaverContents = new Dictionary<string, SaveDataContainer[]>();
 
                 for (int j = 0; j < gameData.Length; j++)
@@ -291,16 +336,7 @@ namespace Daniell.Runtime.Save
                     dataSaverContents.Add(data.guid, data.saveDataContainers);
                 }
 
-                for (int j = 0; j < _registeredDataSavers.Count; j++)
-                {
-                    var dataSaver = _registeredDataSavers[j];
-
-                    if (dataSaver.gameObject.scene.buildIndex == loadedSceneID)
-                    {
-                        // Save data
-                        dataSaver.Load(dataSaverContents[dataSaver.GUID]);
-                    }
-                }
+                return dataSaverContents;
             }
         }
 
@@ -315,23 +351,32 @@ namespace Daniell.Runtime.Save
             // Retrieve registered DataSavers content
             Dictionary<int, List<DataSaverContent>> dataSaverContentByScene = new Dictionary<int, List<DataSaverContent>>();
 
+            List<DataSaverContent> globalDataSavers = new List<DataSaverContent>();
+
             for (int i = 0; i < _registeredDataSavers.Count; i++)
             {
                 var dataSaver = _registeredDataSavers[i];
 
                 var listOfContainers = dataSaver.Save();
-                var objectSceneID = dataSaver.gameObject.scene.buildIndex;
+                var objectSceneID = dataSaver.SceneID;
 
                 var dataSaverContent = new DataSaverContent() { guid = dataSaver.GUID, saveDataContainers = listOfContainers };
 
-                // If the scene hasn't already been added
-                if (!dataSaverContentByScene.ContainsKey(objectSceneID))
+                if (dataSaver.IsGlobal)
                 {
-                    // Create a new slot for the list
-                    dataSaverContentByScene.Add(objectSceneID, new List<DataSaverContent>());
+                    globalDataSavers.Add(dataSaverContent);
                 }
+                else
+                {
+                    // If the scene hasn't already been added
+                    if (!dataSaverContentByScene.ContainsKey(objectSceneID))
+                    {
+                        // Create a new slot for the list
+                        dataSaverContentByScene.Add(objectSceneID, new List<DataSaverContent>());
+                    }
 
-                dataSaverContentByScene[objectSceneID].Add(dataSaverContent);
+                    dataSaverContentByScene[objectSceneID].Add(dataSaverContent);
+                }
             }
 
             // Create save files for each scene
@@ -340,6 +385,12 @@ namespace Daniell.Runtime.Save
                 var saveFileName = GetSaveFileName(dataSaverContent.Key);
                 var saveFileData = dataSaverContent.Value.ToArray();
                 CreateSaveFile(saveFileName, SelectedSlot, saveFileData);
+            }
+
+            // Create the global save file if there is global data to save
+            if (globalDataSavers.Count > 0)
+            {
+                CreateSaveFile(GLOBAL_SAVE_FILE_NAME, SelectedSlot, globalDataSavers.ToArray());
             }
         }
 
