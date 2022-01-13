@@ -1,4 +1,4 @@
-﻿namespace Daniell.Runtime.DataStructures
+﻿namespace Daniell.Runtime.Helpers.DataStructures
 {
     /// <summary>
     /// Wrapper for a single value to enable JSON conversion
@@ -7,6 +7,9 @@
     [System.Serializable]
     public struct ValueWrapper<T>
     {
+        /// <summary>
+        /// Value of the Wrapper
+        /// </summary>
         public T value;
 
         public ValueWrapper(T value)

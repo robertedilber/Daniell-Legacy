@@ -1,4 +1,4 @@
-﻿using Daniell.Runtime.Singletons;
+﻿using Daniell.Runtime.Helpers.Singletons;
 using System;
 
 public class FakeSingletonInstance : SingletonMonoBehaviour<FakeSingletonInstance>

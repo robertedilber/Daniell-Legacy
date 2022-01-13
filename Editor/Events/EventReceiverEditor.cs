@@ -1,7 +1,7 @@
-﻿using Daniell.Runtime.Events;
+﻿using Daniell.Runtime.Systems.Events;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Daniell.Editor.Events
 {
@@ -14,12 +14,21 @@ namespace Daniell.Editor.Events
 
             string text = "";
             string color = "#97f229";
-            GUIStyle newStyle = new GUIStyle();
-            newStyle.richText = true;
-            newStyle.fontSize = 16;
+            GUIStyle descriptionStyle = new GUIStyle();
+            descriptionStyle.richText = true;
+            descriptionStyle.fontSize = 14;
+
+            GUIStyle eventNameStyle = new GUIStyle();
+            eventNameStyle.richText = true;
+            eventNameStyle.fontSize = 16;
 
             if (t.Event != null)
             {
+                string eventFriendlyName = Regex.Replace(t.Event.name, "([a-z])([A-Z])", "$1 $2");
+
+                EditorGUILayout.LabelField($"<color=#3afff5><b>{eventFriendlyName}</b></color>", eventNameStyle);
+
+
                 if (!string.IsNullOrEmpty(t.Event.Description))
                 {
                     text = t.Event.Description;
@@ -35,7 +44,7 @@ namespace Daniell.Editor.Events
                 text = "No event assigned";
             }
 
-            EditorGUILayout.LabelField($"<color={color}><b>{text}</b></color>", newStyle);
+            EditorGUILayout.LabelField($"<color={color}><b>{text}</b></color>", descriptionStyle);
 
             EditorGUILayout.Space();
 

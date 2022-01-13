@@ -1,5 +1,5 @@
-﻿using System;
-using System.Reflection;
+﻿using Daniell.Runtime.Systems.DialogueNodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -7,7 +7,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Daniell.Runtime.DialogueNodes;
 
 namespace Daniell.Editor.DialogueNodes
 {

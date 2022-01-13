@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Daniell.Runtime.DataStructures
+namespace Daniell.Runtime.Helpers.DataStructures
 {
     /// <summary>
     /// A Serializable version of a Dictionary. First get will take more time, so it's best to update manually before accessing.

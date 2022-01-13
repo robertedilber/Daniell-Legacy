@@ -1,5 +1,5 @@
-﻿using Daniell.Runtime.Localization;
-using Daniell.Runtime.WebServices;
+﻿using Daniell.Runtime.Helpers.WebServices;
+using Daniell.Runtime.Systems.Localization;
 using UnityEditor;
 using UnityEngine;
 

@@ -1,5 +1,4 @@
-﻿using Daniell.Runtime.Localization;
-using System;
+﻿using Daniell.Runtime.Systems.Localization;
 using UnityEditor;
 using UnityEngine;
 
