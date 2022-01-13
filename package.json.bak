@@ -9,6 +9,7 @@
   "changelogUrl": "https://example.com/changelog.html",
   "licensesUrl": "https://example.com/licensing.html",
   "dependencies": {
+	  "com.unity.inputsystem": "1.0.0"
  },
  "keywords": [
     "Daniell",
@@ -17,6 +18,6 @@
   "author": {
     "name": "Robert Edilber",
     "email": "robert.edilber@pm.me",
-    "url": "https://www.unity3d.com"
+    "url": "https://github.com/robertedilber"
   }
 }
